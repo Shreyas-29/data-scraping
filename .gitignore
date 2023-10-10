@@ -1,4 +1,7 @@
-./node_modules
+# dependencies
+/node_modules
+
 /a.js
 /b.js
+
 /data.xml
