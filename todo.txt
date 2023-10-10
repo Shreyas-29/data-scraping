@@ -1,6 +1,0 @@
-1. First store all the data from xml file in excel sheet.
-2. Then use the excel sheet as a data source for your test with that user profile url, then use for loop to store the all user details in excel sheet.
-
-import xml.etree.ElementTree as ET
-
-https://www.justia.com/lawyers/criminal-law/texas
