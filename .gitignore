@@ -1,7 +1,9 @@
 # dependencies
 /node_modules
 
-/a.js
-/b.js
-
-/data.xml
+# Exclude specific files
+todo.txt
+test.xml
+a.js
+b.js
+detailed_user_data.xlsx
