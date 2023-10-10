@@ -7,9 +7,7 @@ async function scrapeAndStoreDetailedUserData(filePath) {
     const workbook = xlsx.readFile(filePath);
     const worksheet = workbook.Sheets["User Data"];
     const userDataArray = xlsx.utils.sheet_to_json(worksheet);
-
     const detailedUserDataArray = [];
-
     for (const userData of userDataArray) {
       const profileUrl = userData.profileLink;
       const detailedUserData = await scrapeDetailedUserData(profileUrl);
@@ -18,8 +16,6 @@ async function scrapeAndStoreDetailedUserData(filePath) {
         detailedUserDataArray.push(detailedUserData);
       }
     }
-
-    // Create an Excel file for detailed user data
     const detailedWb = xlsx.utils.book_new();
     const detailedWs = xlsx.utils.json_to_sheet(detailedUserDataArray);
     xlsx.utils.book_append_sheet(detailedWb, detailedWs, "Detailed User Data");
@@ -263,9 +259,9 @@ async function scrapeDetailedUserData(url) {
 
     const concatenatedSocialMediaLinks = socialMediaLinks.join(", ");
 
-    const vCardLink = $(
-      "div.table-item a[data-vars-action='ProfileVCard']"
-    ).attr("href");
+    // const vCardLink = $(
+    //   "div.table-item a[data-vars-action='ProfileVCard']"
+    // ).attr("href");
 
     const profileLink = url || "";
 
@@ -315,7 +311,7 @@ async function scrapeDetailedUserData(url) {
       "Postal Code 5": flattenedPostalCodes[4] || "",
       "State 5": flattenedStates[4] || "",
       "Lawyer Availability": lawyerAvailability,
-      "V Card Link": vCardLink,
+      // "V Card Link": vCardLink,
       "Profile Link": profileLink,
     };
 
