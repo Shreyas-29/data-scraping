@@ -3,6 +3,8 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const xlsx = require("xlsx");
 
+const batchSize = 50;
+
 async function scrapeUserList(url) {
   try {
     const userDataArray = [];
@@ -84,7 +86,8 @@ async function scrapeUserList(url) {
   }
 }
 
-async function scrapeUserListFromUrls(urls) {
+// Define a function to scrape a batch of URLs
+async function scrapeBatch(urls) {
   const allUserData = [];
 
   for (const url of urls) {
@@ -94,6 +97,16 @@ async function scrapeUserListFromUrls(urls) {
   }
 
   return allUserData;
+}
+
+// Define a function to split URLs into batches
+function splitUrlsIntoBatches(urls, batchSize) {
+  const batches = [];
+  for (let i = 0; i < urls.length; i += batchSize) {
+    const batch = urls.slice(i, i + batchSize);
+    batches.push(batch);
+  }
+  return batches;
 }
 
 // Function to parse the XML file and extract URLs
@@ -118,22 +131,83 @@ function parseUrlsFromXml(xmlFilePath) {
   }
 }
 
+// async function main() {
+//   const xmlFilePath = "test.xml"; // Specify the path to your XML file
+//   const urls = parseUrlsFromXml(xmlFilePath);
+//   if (urls.length === 0) {
+//     console.error("No URLs found in the XML file.");
+//     return;
+//   }
+//   const allUserData = await scrapeUserListFromUrls(urls);
+//   if (allUserData.length === 0) {
+//     console.error("No user data scraped.");
+//     return;
+//   }
+//   const wb = xlsx.utils.book_new();
+//   const ws = xlsx.utils.json_to_sheet(allUserData, {});
+//   xlsx.utils.book_append_sheet(wb, ws, "User Data");
+//   xlsx.writeFile(wb, "user_data.xlsx");
+//   console.log("User data saved to user_data.xlsx");
+// }
+// main();
+
 async function main() {
-  const xmlFilePath = "test.xml"; // Specify the path to your XML file
+  const xmlFilePath = "data.xml"; // Specify the path to your XML file
   const urls = parseUrlsFromXml(xmlFilePath);
   if (urls.length === 0) {
     console.error("No URLs found in the XML file.");
     return;
   }
-  const allUserData = await scrapeUserListFromUrls(urls);
+
+  const urlBatches = splitUrlsIntoBatches(urls, batchSize);
+
+  const allUserData = [];
+
+  for (const batch of urlBatches) {
+    const userData = await scrapeBatch(batch);
+    allUserData.push(...userData);
+  }
+
   if (allUserData.length === 0) {
     console.error("No user data scraped.");
     return;
   }
+
   const wb = xlsx.utils.book_new();
   const ws = xlsx.utils.json_to_sheet(allUserData, {});
   xlsx.utils.book_append_sheet(wb, ws, "User Data");
-  xlsx.writeFile(wb, "user_data.xlsx");
-  console.log("User data saved to user_data.xlsx");
+  xlsx.writeFile(wb, "users_data.xlsx");
+  console.log("User data saved to users_data.xlsx");
 }
+
 main();
+
+// async function main2() {
+//   const xmlFilePath = "data.xml"; // Specify the path to your XML file
+//   const urls = parseUrlsFromXml(xmlFilePath);
+//   if (urls.length === 0) {
+//     console.error("No URLs found in the XML file.");
+//     return;
+//   }
+
+//   const allUserData = [];
+
+//   for (const url of urls) {
+//     const userData = await scrapeUserList(url);
+//     console.log(`Scraped data for URL: ${url}`);
+//     allUserData.push(...userData);
+//   }
+
+//   if (allUserData.length === 0) {
+//     console.error("No user data scraped.");
+//     return;
+//   }
+
+//   const wb = xlsx.utils.book_new();
+//   const ws = xlsx.utils.json_to_sheet(allUserData, {});
+//   xlsx.utils.book_append_sheet(wb, ws, "User Data");
+//   xlsx.writeFile(wb, "user_data.xlsx");
+//   console.log("User data saved to user_data.xlsx");
+// }
+
+// main();

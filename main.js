@@ -94,6 +94,18 @@ async function scrapeUserListFromUrls(urls) {
   return allUserData;
 }
 
+// async function scrapeUserListFromUrls(urls) {
+//   const allUserData = [];
+
+//   for (const url of urls) {
+//     const userData = await scrapeUserList(url);
+//     console.log("url:", url, "userData:", userData);
+//     allUserData.push(...userData);
+//   }
+
+//   return allUserData;
+// }
+
 // Function to parse the XML file and extract URLs
 function parseUrlsFromXml(xmlFilePath) {
   try {
