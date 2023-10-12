@@ -161,7 +161,7 @@ async function main() {
     return;
   }
 
-  const batchSize = 50;
+  const batchSize = 100;
 
   let existingData = [];
   let wb;
