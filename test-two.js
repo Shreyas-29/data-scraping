@@ -324,14 +324,14 @@ async function main() {
   }
 
   // Specify the batch size
-  const batchSize = 50;
+  const batchSize = 5;
 
   // Load existing data or create a new workbook
   let existingData = [];
   let wb;
 
   try {
-    wb = xlsx.readFile("user_data.xlsx");
+    wb = xlsx.readFile("general_user_data.xlsx");
     if (wb.Sheets["User Data"]) {
       existingData = xlsx.utils.sheet_to_json(wb.Sheets["User Data"]);
     }
@@ -349,14 +349,14 @@ async function main() {
     const currentUrls = urls.slice(currentIndex, currentIndex + batchSize);
     const allUserData = await scrapeUserListFromUrls(currentUrls, 0, batchSize);
 
-    for (const userData of allUserData) {
-      if (!uniqueUserNames.has(userData.Name)) {
-        existingData.push(userData);
-        uniqueUserNames.add(userData.Name);
-      }
-    }
+    // for (const userData of allUserData) {
+    //   if (!uniqueUserNames.has(userData.Name)) {
+    //     existingData.push(userData);
+    //     uniqueUserNames.add(userData.Name);
+    //   }
+    // }
 
-    // existingData = [...existingData, ...allUserData];
+    existingData = [...existingData, ...allUserData];
     currentIndex += batchSize;
     urlsScraped += currentUrls.length;
 
@@ -376,8 +376,8 @@ async function main() {
     xlsx.utils.book_append_sheet(wb, ws, "User Data");
   }
 
-  xlsx.writeFile(wb, "user_data5.xlsx");
-  console.log("User data saved to user_data5.xlsx");
+  xlsx.writeFile(wb, "general_user_data.xlsx");
+  console.log("User data saved to general_user_data.xlsx");
 }
 
 main();
